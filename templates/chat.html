@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>chat room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <h1>Kámošácký chat</h1>
+    <div id="messages"></div>
+    <h3>poslat zprávu</h3>
+    <form id="msg-post" action="{{ url_for('chat_new') }}" method="post" enctype="multipart/form-data">
+        <input type="text" name="text" placeholder="text">
+        <input id="button-send" type="submit" value="odeslat">
+    </form><br>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.6.1.min.js') }}"></script>
+    <script>
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        function escapeHtml(string) {
+            return String(string).replace(/[&<>"'`=\/]/g, function(s) {
+                return entityMap[s];
+            });
+        }
+
+        function reloadChat() {
+            $.ajax({
+                url: "{{ url_for('static', filename='messages.txt') }}",
+                success: function(result) {
+                    $("#messages").html("");
+                    messages = result.split("\n");
+                    messages.forEach(msg => {
+                        $("#messages").append("<p class=\"msg\">" + escapeHtml(msg) + "</p>");
+                    });
+                }
+            });
+        }
+
+        reloadChat();
+
+        $("#button-send").on("click", (e) => {
+            console.log("test");
+            $.ajax({
+
+                url: "/chat",
+                type: "POST",
+                data: {
+                    text: text,
+                },
+                success: (e) => {
+                    location.reload();
+                },
+            });
+        });
+
+        setInterval(reloadChat, 1000);
+    </script>
+</body>
+
+</html>

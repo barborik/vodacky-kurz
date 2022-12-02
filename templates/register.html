@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>registrace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <center style="color: red;">{{ error }}</center>
+    <br><br>
+    <form method="post">
+        <span><span style="color: red;">*</span> přezdívka</span><br>
+        <input name="nick" type="text"><br><br>
+
+        <span><span style="color: red;">*</span> umíš plavat?</span><br>
+        <input type="radio" name="je_plavec" value="1">
+        <span>ANO</span><br>
+        <input type="radio" name="je_plavec" value="0">
+        <span>NE</span><br><br>
+
+        <span>s kým bys chtěl být na lodi?</span><br>
+        <input name="kanoe_kamarad" type="text"><br><br>
+
+        <input type="submit" value="odeslat" style="padding: 0.1em; cursor: pointer;">
+        <button onclick="history.back()">zpět</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.6.1.min.js') }}"></script>
+    <script>
+        
+    </script>
+
+    <style>
+        form {
+            position: absolute;
+            left: 50%;
+            top: 35%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</body>
+
+</html>
