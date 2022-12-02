@@ -10,9 +10,9 @@
 <body>
     <center style="color: red;">{{ error }}</center>
     <br><br>
-    <form method="post">
+    <form method="post" onsubmit="return false;">
         <span><span style="color: red;">*</span> přezdívka</span><br>
-        <input name="nick" type="text"><br><br>
+        <input id="nick" name="nick" type="text"><br><br>
 
         <span><span style="color: red;">*</span> umíš plavat?</span><br>
         <input type="radio" name="je_plavec" value="1">
@@ -21,18 +21,48 @@
         <span>NE</span><br><br>
 
         <span>s kým bys chtěl být na lodi?</span><br>
-        <input name="kanoe_kamarad" type="text"><br><br>
+        <input id="kanoe_kamarad" name="kanoe_kamarad" type="text"><br><br>
 
-        <input type="submit" value="odeslat" style="padding: 0.1em; cursor: pointer;">
-        <button onclick="history.back()">zpět</button>
+        <button id="submit" style="padding: 0.1em; cursor: pointer;">odeslat</button>
+        <a href="{{ url_for('root') }}" style="">zpět</a>
     </form>
 
     <script src="{{ url_for('static', filename='js/jquery-3.6.1.min.js') }}"></script>
     <script>
-        
+        document.querySelector("#submit").addEventListener("click", (e) => {
+            $.ajax({
+                url: "{{ url_for('static', filename='kamaradi.txt') }}",
+                success: function (result) {
+                    let json = JSON.parse(result);
+                    for (const key in json) {
+                        if (json[key]["nick"] == document.querySelector("#nick").value) {
+                            return;
+                        }
+                    }
+
+                    $.ajax({
+                        url: "{{ url_for('register') }}",
+                        method: "POST",
+                        data: {
+                            "nick": document.querySelector("#nick").value,
+                            "je_plavec": document.querySelector('input[name="je_plavec"]:checked').value,
+                            "kanoe_kamarad": document.querySelector("#kanoe_kamarad").value,
+                        },
+                        success: function (result) {
+                            alert("registrace hotova!");
+                        }
+                    });
+                }
+            });
+        });
     </script>
 
     <style>
+        a {
+            text-decoration: none;
+            color: #e8e6e3;
+        }
+
         form {
             position: absolute;
             left: 50%;
